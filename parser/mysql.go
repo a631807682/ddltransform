@@ -148,7 +148,7 @@ func (v *createTableVisitor) Enter(in ast.Node) (ast.Node, bool) {
 	return in, true
 }
 
-func (v *createTableVisitor) Leave(in ast.Node) (ast.Node, bool) {
+func (*createTableVisitor) Leave(in ast.Node) (ast.Node, bool) {
 	return in, true
 }
 
