@@ -1,9 +1,10 @@
 package tests_test
 
 import (
-	"ddltransform/parser"
-	"ddltransform/schema"
 	"testing"
+
+	"github.com/a631807682/ddltransform/parser"
+	"github.com/a631807682/ddltransform/schema"
 
 	"github.com/stretchr/testify/assert"
 )

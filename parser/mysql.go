@@ -1,8 +1,9 @@
 package parser
 
 import (
-	"ddltransform/schema"
 	"fmt"
+
+	"github.com/a631807682/ddltransform/schema"
 
 	"github.com/pingcap/tidb/parser"
 	"github.com/pingcap/tidb/parser/ast"

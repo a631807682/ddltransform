@@ -1,2 +1,4 @@
 # ddltransform
-transform ddl to gorm model
+parse ddl and transform to gorm model
+
+## Usage

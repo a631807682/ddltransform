@@ -1,8 +1,8 @@
 package transformer
 
 import (
-	"ddltransform/schema"
-	"ddltransform/utils"
+	"github.com/a631807682/ddltransform/schema"
+	"github.com/a631807682/ddltransform/utils"
 
 	j "github.com/dave/jennifer/jen"
 	"github.com/jinzhu/inflection"

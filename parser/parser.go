@@ -1,6 +1,6 @@
 package parser
 
-import "ddltransform/schema"
+import "github.com/a631807682/ddltransform/schema"
 
 type Parser interface {
 	Name() string

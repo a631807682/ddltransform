@@ -1,6 +1,6 @@
 package transformer
 
-import "ddltransform/schema"
+import "github.com/a631807682/ddltransform/schema"
 
 type Transformer interface {
 	Name() string
