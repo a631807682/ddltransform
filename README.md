@@ -1,2 +1,2 @@
-# transform_ddl_model
+# ddl_transform
 transform ddl to gorm model
