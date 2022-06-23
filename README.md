@@ -1,5 +1,8 @@
 # ddltransform
-parse ddl and transform to gorm model
+Parse ddl and transform to gorm model
+
+## Desc
+Generate the orm model through parse sql to reduce the dependence on the environment
 
 ## Usage
 Use `parser` and `transformer` to generate model 
