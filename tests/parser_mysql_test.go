@@ -1,29 +1,30 @@
-package parser
+package tests_test
 
 import (
+	"ddltransform/parser"
 	"ddltransform/schema"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-type testCaseResult struct {
+type parseResult struct {
 	table  string
-	fileds []schema.Field
+	fields []schema.Field
 }
 
-type testCase struct {
-	ddl     string
-	success bool
-	res     testCaseResult
+type parseTestCase struct {
+	ddl      string
+	success  bool
+	parseRes parseResult
 }
 
 func TestMysqlParse(t *testing.T) {
-	p := &MysqlParser{}
-	tcs := []testCase{{
+	p := &parser.MysqlParser{}
+	tcs := []parseTestCase{{
 		ddl: `
 		CREATE TABLE test_data (
-			id bigint(20) NOT NULL AUTO_INCREMENT,
+			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 			create_at datetime NOT NULL,
 			deleted tinyint(1) NOT NULL,
 			version bigint(20) DEFAULT '10' COMMENT 'version info',
@@ -36,25 +37,29 @@ func TestMysqlParse(t *testing.T) {
 		) ENGINE=InnoDB AUTO_INCREMENT=95 DEFAULT CHARACTER SET utf8 COLLATE UTF8_GENERAL_CI ROW_FORMAT=COMPACT COMMENT='' CHECKSUM=0 DELAY_KEY_WRITE=0;
 		`,
 		success: true,
-		res: testCaseResult{
+		parseRes: parseResult{
 			table: `test_data`,
-			fileds: []schema.Field{{
+			fields: []schema.Field{{
 				DBName:        "id",
-				DBType:        "bigint(20)",
+				DBType:        "bigint(20) UNSIGNED",
+				GoType:        schema.Uint,
 				PrimaryKey:    true,
 				AutoIncrement: true,
 				NotNull:       true,
 			}, {
 				DBName:  "create_at",
 				DBType:  "datetime",
+				GoType:  schema.Time,
 				NotNull: true,
 			}, {
 				DBName:  "deleted",
 				DBType:  "tinyint(1)",
+				GoType:  schema.Bool,
 				NotNull: true,
 			}, {
 				DBName:          "version",
 				DBType:          "bigint(20)",
+				GoType:          schema.Int,
 				HasDefaultValue: true,
 				DefaultValue:    "10",
 				Comment:         "version info",
@@ -63,20 +68,24 @@ func TestMysqlParse(t *testing.T) {
 			}, {
 				DBName:          "address",
 				DBType:          "varchar(255)",
+				GoType:          schema.String,
 				NotNull:         true,
 				HasDefaultValue: true,
 				DefaultValue:    "china",
 			}, {
 				DBName: "amount",
 				DBType: "decimal(19,2)",
+				GoType: schema.Float,
 			}, {
 				DBName:        "wx_mp_app_id",
 				DBType:        "varchar(32)",
+				GoType:        schema.String,
 				Unique:        true,
 				UniqueKeyName: "uk_app_version",
 			}, {
 				DBName: "contacts",
 				DBType: "varchar(50)",
+				GoType: schema.String,
 			}},
 		},
 	}}
@@ -87,10 +96,10 @@ func TestMysqlParse(t *testing.T) {
 			t.Errorf("success flag and parse status not equal expect status:%v got err:%v", c.success, err)
 		}
 
-		assert.Equal(t, c.res.table, table)
-		assert.Equal(t, len(c.res.fileds), len(fields))
-		for i := 0; i < len(c.res.fileds); i++ {
-			assert.Equalf(t, c.res.fileds[i], fields[i], "index:%d name:%s", i, c.res.fileds[i].DBName)
+		assert.Equal(t, c.parseRes.table, table)
+		assert.Equal(t, len(c.parseRes.fields), len(fields))
+		for i := 0; i < len(c.parseRes.fields); i++ {
+			assert.Equalf(t, c.parseRes.fields[i], fields[i], "index:%d name:%s", i, c.parseRes.fields[i].DBName)
 		}
 	}
 }

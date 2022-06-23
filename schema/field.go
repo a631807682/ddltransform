@@ -16,6 +16,7 @@ type Field struct {
 	Unique          bool
 	UniqueKeyName   string
 	Comment         string
+	GoType          FieldGoType
 }
 
 func (filed *Field) GetTagString() string {
@@ -49,3 +50,14 @@ func (filed *Field) GetTagString() string {
 
 	return strings.Join(attrs, ";")
 }
+
+type FieldGoType string
+
+const (
+	Bool   FieldGoType = "bool"
+	Int    FieldGoType = "int"
+	Uint   FieldGoType = "uint"
+	Float  FieldGoType = "float"
+	String FieldGoType = "string"
+	Time   FieldGoType = "time"
+)

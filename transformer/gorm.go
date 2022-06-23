@@ -3,7 +3,6 @@ package transformer
 import (
 	"ddltransform/schema"
 	"ddltransform/utils"
-	"fmt"
 
 	j "github.com/dave/jennifer/jen"
 	"github.com/jinzhu/inflection"
@@ -18,16 +17,31 @@ func (*GormTransformer) Transform(table string, fileds []schema.Field) (modeCode
 	for _, field := range fileds {
 		tags := make(map[string]string, 1)
 		tags["gorm"] = field.GetTagString()
-		filed := j.Id(utils.ToFormatName(field.DBName)).String().Tag(tags)
+		// filed := j.Id(utils.ToFormatName(field.DBName)).String().Tag(tags)
+		fCode := j.Id(utils.ToFormatName(field.DBName))
 
-		fCodes = append(fCodes, filed)
+		switch field.GoType {
+		case schema.Bool:
+			fCode.Bool()
+		case schema.Int:
+			fCode.Int64()
+		case schema.Uint:
+			fCode.Uint64()
+		case schema.Float:
+			fCode.Float64()
+		case schema.String:
+			fCode.String()
+		case schema.Time:
+			fCode.Qual("time", "Time")
+		}
+
+		fCode.Tag(tags)
+		fCodes = append(fCodes, fCode)
 	}
 
 	c := j.Type().Id(tableName).Struct(
 		fCodes...,
 	)
-	fmt.Println(tableName)
-	fmt.Printf("%#v", c.GoString())
 
 	return c.GoString(), nil
 }

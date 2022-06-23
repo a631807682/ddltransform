@@ -9,6 +9,43 @@ import (
 	tdriver "github.com/pingcap/tidb/parser/test_driver"
 )
 
+const (
+	TypeUnspecified byte = 0
+	TypeTiny        byte = 1 // TINYINT
+	TypeShort       byte = 2 // SMALLINT
+	TypeLong        byte = 3 // INT
+	TypeFloat       byte = 4
+	TypeDouble      byte = 5
+	TypeNull        byte = 6
+	TypeTimestamp   byte = 7
+	TypeLonglong    byte = 8 // BIGINT
+	TypeInt24       byte = 9 // MEDIUMINT
+	TypeDate        byte = 10
+	/* TypeDuration original name was TypeTime, renamed to TypeDuration to resolve the conflict with Go type Time.*/
+	TypeDuration byte = 11
+	TypeDatetime byte = 12
+	TypeYear     byte = 13
+	TypeNewDate  byte = 14
+	TypeVarchar  byte = 15
+	TypeBit      byte = 16
+
+	TypeJSON       byte = 0xf5
+	TypeNewDecimal byte = 0xf6
+	TypeEnum       byte = 0xf7
+	TypeSet        byte = 0xf8
+	TypeTinyBlob   byte = 0xf9
+	TypeMediumBlob byte = 0xfa
+	TypeLongBlob   byte = 0xfb
+	TypeBlob       byte = 0xfc
+	TypeVarString  byte = 0xfd
+	TypeString     byte = 0xfe
+	TypeGeometry   byte = 0xff
+)
+
+const (
+	UnsignedFlag uint = 1 << 5 /* Field is unsigned */
+)
+
 type createTableVisitor struct {
 	table  string
 	fileds []schema.Field
@@ -42,12 +79,45 @@ func (v *createTableVisitor) Enter(in ast.Node) (ast.Node, bool) {
 				DBType: c.Tp.String(),
 			}
 
+			// database type to go type
+			switch c.Tp.GetType() {
+			case TypeString, TypeBlob, TypeMediumBlob, TypeLongBlob,
+				TypeVarString, TypeVarchar, TypeTinyBlob:
+				filed.GoType = schema.String
+			case TypeDate, TypeDatetime, TypeDuration, TypeTimestamp:
+				filed.GoType = schema.Time
+			case TypeFloat, TypeDouble:
+				filed.GoType = schema.Float
+			case TypeNewDecimal:
+				if c.Tp.GetDecimal() > 0 {
+					filed.GoType = schema.Float
+				} else {
+					filed.GoType = schema.Int
+				}
+			case TypeTiny:
+				if c.Tp.GetFlen() == 1 {
+					filed.GoType = schema.Bool
+				} else {
+					filed.GoType = schema.Int
+				}
+			case TypeInt24, TypeShort, TypeLong, TypeLonglong:
+				if (c.Tp.GetFlag() & UnsignedFlag) > 0 { // UNSIGNED
+					filed.GoType = schema.Uint
+				} else {
+					filed.GoType = schema.Int
+				}
+			default:
+				// use string to receive unhandle database type
+				filed.GoType = schema.String
+			}
+
 			if _, ok := primaryKeyMaps[c.Name.Name.L]; ok {
 				filed.PrimaryKey = true
 			}
 
 			filed.UniqueKeyName, filed.Unique = uniqueMaps[c.Name.Name.L]
 
+			// filed options
 			for _, opt := range c.Options {
 				switch opt.Tp {
 				case ast.ColumnOptionAutoIncrement:
@@ -70,8 +140,6 @@ func (v *createTableVisitor) Enter(in ast.Node) (ast.Node, bool) {
 				}
 			}
 
-			fmt.Println(filed.DBName, len(c.Options))
-			fmt.Printf("%+v\n", filed)
 			v.fileds = append(v.fileds, filed)
 		}
 	}
