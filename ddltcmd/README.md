@@ -1,15 +1,15 @@
 # ddltrans
 
 ## Install
-> 	go install github.com/a631807682/ddltransform/cmd@latest
+> 	go install github.com/a631807682/ddltransform/ddltcmd@latest
 
 ## Usage
 ```
 NAME:
-   ddltrans start - parse definition language and generate to code
+   ddltcmd start - parse definition language and generate to code
 
 USAGE:
-   ddltrans start [command options] [arguments...]
+   ddltcmd start [command options] [arguments...]
 
 OPTIONS:
    --parser value, --ps value       use parser for parse ddl file (default: mysql)
@@ -17,4 +17,4 @@ OPTIONS:
    --transformer value, --tf value  use transformer for code generate (default: gorm)
 ```
 ## Examples
-> ddltrans start -ps sqlite -tf gorm -p ./sql.ddl
+> ddltcmd start -ps sqlite -tf gorm -p ./sql.ddl

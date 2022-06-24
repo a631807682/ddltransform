@@ -12,7 +12,7 @@ import (
 
 func main() {
 	app := &cli.App{
-		Name:    "ddltranscmd",
+		Name:    "ddltcmd",
 		Version: "0.0.1",
 		Commands: []*cli.Command{
 			generate(),

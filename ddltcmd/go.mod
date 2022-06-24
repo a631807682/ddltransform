@@ -1,4 +1,4 @@
-module github.com/a631807682/ddltransform/ddltranscmd
+module github.com/a631807682/ddltransform/ddltcmd
 
 go 1.18
 
