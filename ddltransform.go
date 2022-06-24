@@ -34,18 +34,37 @@ func type2Transformer(tt TransformerType) transformer.Transformer {
 }
 
 type Config struct {
-	Parser      ParserType
-	Transformer TransformerType
+	// ParserType support parser type
+	ParserType ParserType
+	// TransformerType support transformer type
+	TransformerType TransformerType
+	// Parser customize parser
+	Parser parser.Parser
+	// Transformer customize transformer
+	Transformer transformer.Transformer
 }
 
 func Transform(ddl string, config Config) (code string, err error) {
-	p := type2parser(config.Parser)
+	var p parser.Parser
+	var t transformer.Transformer
+
+	if config.Parser != nil { //customize parser
+		p = config.Parser
+	} else {
+		p = type2parser(config.ParserType)
+	}
+
 	if p == nil {
 		err = fmt.Errorf("parser missing. config:%+v", config)
 		return
 	}
 
-	t := type2Transformer(config.Transformer)
+	if config.Transformer != nil { //customize transformer
+		t = config.Transformer
+	} else {
+		t = type2Transformer(config.TransformerType)
+	}
+
 	if t == nil {
 		err = fmt.Errorf("transformer missing. config:%+v", config)
 		return

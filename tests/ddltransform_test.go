@@ -21,8 +21,8 @@ func TestTransform(t *testing.T) {
 	expectCode := "type Blacklist struct {\n\tID        uint64    `gorm:\"column:id;type:int(10) UNSIGNED;primaryKey;autoIncrement;NOT NULL\"`\n\tEmail     string    `gorm:\"column:email;type:varchar(50) CHARACTER SET utf8;NOT NULL\"`\n\tType      string    `gorm:\"column:type;type:varchar(20) CHARACTER SET utf8;NOT NULL\"`\n\tCreatedAt time.Time `gorm:\"column:created_at;type:datetime;NOT NULL\"`\n\tUpdatedAt time.Time `gorm:\"column:updated_at;type:datetime;NOT NULL\"`\n}"
 
 	code, err := ddltransform.Transform(ddl, ddltransform.Config{
-		Parser:      ddltransform.Mysql,
-		Transformer: ddltransform.Gorm,
+		ParserType:      ddltransform.Mysql,
+		TransformerType: ddltransform.Gorm,
 	})
 	assert.Equal(t, nil, err)
 	assert.Equal(t, expectCode, code)

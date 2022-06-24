@@ -5,7 +5,7 @@ Parse ddl and transform to gorm model
 Generate the orm model through parse sql to reduce the dependence on the environment
 
 ## Usage
-1. Use `parser` and `transformer` package to generate model code
+1. Use generate model code.
 ```go
 const ddl = `		
 CREATE TABLE test_data (
@@ -26,9 +26,7 @@ code, err := ddltransform.Transform(ddl, ddltransform.Config{
 	Parser:      ddltransform.Mysql,
 	Transformer: ddltransform.Gorm,
 })
-...
 
-fmt.Print(code)
 // type TestDatum struct {
 //     ID        uint64    `gorm:"column:id;type:bigint(20) UNSIGNED;primaryKey;autoIncrement;NOT NULL"`
 //     CreateAt  time.Time `gorm:"column:create_at;type:datetime;NOT NULL"`
@@ -40,8 +38,34 @@ fmt.Print(code)
 //     Contacts  string    `gorm:"column:contacts;type:varchar(50)"`
 // }
 ```
+2. Customize the parser to support more db, or customize the transformer to support more code generate.
+```go
+type selectTransformer struct {
+}
 
-2. Use command-line to generate model code (WIP)
+func (*selectTransformer) Name() string {
+	return "select_transfomer"
+}
+
+func (*selectTransformer) Transform(table string, fields []schema.Field) (modeCode string, err error) {
+	layout := "SELECT %s FROM %s"
+	cols := make([]string, len(fields))
+	for i, f := range fields {
+		cols[i] = f.DBName
+	}
+	modeCode = fmt.Sprintf(layout, strings.Join(cols, ","), table)
+	return
+}
+
+code, err := ddltransform.Transform(ddl, ddltransform.Config{
+	ParserType:  ddltransform.Mysql,
+	Transformer: &selectTransformer{},
+})
+
+// SELECT id,create_at,deleted,version,address,amount,wx_mp_app_id,contacts FROM test_data
+
+```
+3. Use command-line to generate model code (WIP)
 
 
 ## More Examples

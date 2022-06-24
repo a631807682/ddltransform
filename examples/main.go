@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/a631807682/ddltransform"
+	"github.com/a631807682/ddltransform/schema"
 )
 
 const ddl = `		
@@ -22,16 +24,22 @@ CREATE TABLE test_data (
 `
 
 func main() {
+	defaultCase()
+	customizeCase()
+}
+
+// package support parser and transformer
+func defaultCase() {
 	code, err := ddltransform.Transform(ddl, ddltransform.Config{
-		Parser:      ddltransform.Mysql,
-		Transformer: ddltransform.Gorm,
+		ParserType:      ddltransform.Mysql,
+		TransformerType: ddltransform.Gorm,
 	})
 	if err != nil {
 		fmt.Printf("transform err:%v", err)
 		return
 	}
 
-	fmt.Print(code)
+	fmt.Println("defaultCase:\n", code)
 	// type TestDatum struct {
 	//     ID        uint64    `gorm:"column:id;type:bigint(20) UNSIGNED;primaryKey;autoIncrement;NOT NULL"`
 	//     CreateAt  time.Time `gorm:"column:create_at;type:datetime;NOT NULL"`
@@ -42,4 +50,36 @@ func main() {
 	//     WxMpAppID string    `gorm:"column:wx_mp_app_id;type:varchar(32);uniqueIndex:uk_app_version"`
 	//     Contacts  string    `gorm:"column:contacts;type:varchar(50)"`
 	// }
+}
+
+type selectTransformer struct {
+}
+
+func (*selectTransformer) Name() string {
+	return "select_transfomer"
+}
+
+func (*selectTransformer) Transform(table string, fields []schema.Field) (modeCode string, err error) {
+	layout := "SELECT %s FROM %s"
+	cols := make([]string, len(fields))
+	for i, f := range fields {
+		cols[i] = f.DBName
+	}
+	modeCode = fmt.Sprintf(layout, strings.Join(cols, ","), table)
+	return
+}
+
+// customize parser or transformer
+func customizeCase() {
+	code, err := ddltransform.Transform(ddl, ddltransform.Config{
+		ParserType:  ddltransform.Mysql,
+		Transformer: &selectTransformer{},
+	})
+	if err != nil {
+		fmt.Printf("transform err:%v", err)
+		return
+	}
+
+	fmt.Println("customizeCase:\n", code)
+	// SELECT id,create_at,deleted,version,address,amount,wx_mp_app_id,contacts FROM test_data
 }

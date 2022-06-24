@@ -49,7 +49,7 @@ const (
 
 type createTableVisitor struct {
 	table  string
-	fileds []schema.Field
+	fields []schema.Field
 }
 
 func (v *createTableVisitor) Enter(in ast.Node) (ast.Node, bool) {
@@ -73,9 +73,9 @@ func (v *createTableVisitor) Enter(in ast.Node) (ast.Node, bool) {
 			}
 		}
 
-		v.fileds = make([]schema.Field, 0, 10)
+		v.fields = make([]schema.Field, 0, 10)
 		for _, c := range ctStmt.Cols {
-			filed := schema.Field{
+			field := schema.Field{
 				DBName: c.Name.Name.L,
 				DBType: c.Tp.String(),
 			}
@@ -84,64 +84,64 @@ func (v *createTableVisitor) Enter(in ast.Node) (ast.Node, bool) {
 			switch c.Tp.GetType() {
 			case TypeString, TypeBlob, TypeMediumBlob, TypeLongBlob,
 				TypeVarString, TypeVarchar, TypeTinyBlob:
-				filed.GoType = schema.String
+				field.GoType = schema.String
 			case TypeDate, TypeDatetime, TypeDuration, TypeTimestamp:
-				filed.GoType = schema.Time
+				field.GoType = schema.Time
 			case TypeFloat, TypeDouble:
-				filed.GoType = schema.Float
+				field.GoType = schema.Float
 			case TypeNewDecimal:
 				if c.Tp.GetDecimal() > 0 {
-					filed.GoType = schema.Float
+					field.GoType = schema.Float
 				} else {
-					filed.GoType = schema.Int
+					field.GoType = schema.Int
 				}
 			case TypeTiny:
 				if c.Tp.GetFlen() == 1 {
-					filed.GoType = schema.Bool
+					field.GoType = schema.Bool
 				} else {
-					filed.GoType = schema.Int
+					field.GoType = schema.Int
 				}
 			case TypeInt24, TypeShort, TypeLong, TypeLonglong:
 				if (c.Tp.GetFlag() & UnsignedFlag) > 0 { // UNSIGNED
-					filed.GoType = schema.Uint
+					field.GoType = schema.Uint
 				} else {
-					filed.GoType = schema.Int
+					field.GoType = schema.Int
 				}
 			default:
 				// use string to receive unhandle database type
-				filed.GoType = schema.String
+				field.GoType = schema.String
 			}
 
 			if _, ok := primaryKeyMaps[c.Name.Name.L]; ok {
-				filed.PrimaryKey = true
+				field.PrimaryKey = true
 			}
 
-			filed.UniqueKeyName, filed.Unique = uniqueMaps[c.Name.Name.L]
+			field.UniqueKeyName, field.Unique = uniqueMaps[c.Name.Name.L]
 
-			// filed options
+			// field options
 			for _, opt := range c.Options {
 				switch opt.Tp {
 				case ast.ColumnOptionAutoIncrement:
-					filed.AutoIncrement = true
+					field.AutoIncrement = true
 				case ast.ColumnOptionNotNull:
-					filed.NotNull = true
+					field.NotNull = true
 				case ast.ColumnOptionDefaultValue:
 					if ve, ok := opt.Expr.(*tdriver.ValueExpr); ok {
 						if ve.Datum.Kind() != tdriver.KindNull {
-							filed.HasDefaultValue = true
-							filed.DefaultValue = ve.Datum.GetString()
+							field.HasDefaultValue = true
+							field.DefaultValue = ve.Datum.GetString()
 						}
 					}
 				case ast.ColumnOptionComment:
 					if ve, ok := opt.Expr.(*tdriver.ValueExpr); ok {
 						if ve.Datum.Kind() == tdriver.KindString {
-							filed.Comment = ve.Datum.GetString()
+							field.Comment = ve.Datum.GetString()
 						}
 					}
 				}
 			}
 
-			v.fileds = append(v.fileds, filed)
+			v.fields = append(v.fields, field)
 		}
 	}
 
@@ -165,7 +165,7 @@ func parse(sql string) (*ast.StmtNode, error) {
 
 type MysqlParser struct{}
 
-func (*MysqlParser) Parse(ddl string) (table string, fileds []schema.Field, err error) {
+func (*MysqlParser) Parse(ddl string) (table string, fields []schema.Field, err error) {
 	astNode, err := parse(ddl)
 	if err != nil {
 		return
@@ -179,7 +179,7 @@ func (*MysqlParser) Parse(ddl string) (table string, fileds []schema.Field, err 
 	}
 
 	table = v.table
-	fileds = v.fileds
+	fields = v.fields
 	return
 }
 

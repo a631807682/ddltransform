@@ -14,14 +14,14 @@ func (*GormTransformer) Name() string {
 	return "gorm"
 }
 
-func (*GormTransformer) Transform(table string, fileds []schema.Field) (modeCode string, err error) {
+func (*GormTransformer) Transform(table string, fields []schema.Field) (modeCode string, err error) {
 	tableName := utils.ToFormatName(inflection.Singular(table))
 
 	fCodes := make([]j.Code, 0)
-	for _, field := range fileds {
+	for _, field := range fields {
 		tags := make(map[string]string, 1)
 		tags["gorm"] = field.GetTagString()
-		// filed := j.Id(utils.ToFormatName(field.DBName)).String().Tag(tags)
+		// field := j.Id(utils.ToFormatName(field.DBName)).String().Tag(tags)
 		fCode := j.Id(utils.ToFormatName(field.DBName))
 
 		switch field.GoType {

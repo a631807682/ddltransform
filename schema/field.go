@@ -19,33 +19,33 @@ type Field struct {
 	GoType          FieldGoType
 }
 
-func (filed *Field) GetTagString() string {
+func (field *Field) GetTagString() string {
 	attrs := make([]string, 2, 10)
-	attrs[0] = "column:" + filed.DBName
-	attrs[1] = "type:" + filed.DBType
+	attrs[0] = "column:" + field.DBName
+	attrs[1] = "type:" + field.DBType
 
-	if filed.PrimaryKey {
+	if field.PrimaryKey {
 		attrs = append(attrs, "primaryKey")
 	}
 
-	if filed.AutoIncrement {
+	if field.AutoIncrement {
 		attrs = append(attrs, "autoIncrement")
 	}
 
-	if filed.HasDefaultValue {
-		attrs = append(attrs, "default:"+filed.DefaultValue)
+	if field.HasDefaultValue {
+		attrs = append(attrs, "default:"+field.DefaultValue)
 	}
 
-	if filed.NotNull {
+	if field.NotNull {
 		attrs = append(attrs, "NOT NULL")
 	}
 
-	if filed.Unique {
-		attrs = append(attrs, "uniqueIndex:"+filed.UniqueKeyName)
+	if field.Unique {
+		attrs = append(attrs, "uniqueIndex:"+field.UniqueKeyName)
 	}
 
-	if filed.Comment != "" {
-		attrs = append(attrs, "comment:"+filed.Comment)
+	if field.Comment != "" {
+		attrs = append(attrs, "comment:"+field.Comment)
 	}
 
 	return strings.Join(attrs, ";")
