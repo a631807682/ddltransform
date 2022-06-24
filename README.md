@@ -1,6 +1,11 @@
 # ddltransform
 Parse ddl and transform to gorm model
 
+[![go report card](https://goreportcard.com/badge/github.com/a631807682/ddltransform "go report card")](https://goreportcard.com/report/github.com/a631807682/ddltransform)
+[![test status](https://github.com/a631807682/ddltransform/workflows/tests/badge.svg?branch=main "test status")](https://github.com/a631807682/ddltransform/actions)
+[![MIT license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
+[![Go.Dev reference](https://img.shields.io/badge/go.dev-reference-blue?logo=go&logoColor=white)](https://pkg.go.dev/github.com/a631807682/ddltransform)
+
 ## Desc
 Generate the orm model through parse sql to reduce the dependence on the environment
 
