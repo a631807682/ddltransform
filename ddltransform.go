@@ -12,13 +12,15 @@ type TransformerType uint
 
 const (
 	// support parser type
-	Mysql ParserType = 1
+	Mysql  ParserType = 1
+	Sqlite ParserType = 2
 	// support transformer type
 	Gorm TransformerType = 1
 )
 
 var parserMap = map[ParserType]parser.Parser{
-	Mysql: &parser.MysqlParser{},
+	Mysql:  &parser.MysqlParser{},
+	Sqlite: &parser.MysqlParser{},
 }
 
 var transformerMap = map[TransformerType]transformer.Transformer{

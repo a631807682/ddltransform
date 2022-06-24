@@ -90,7 +90,11 @@ func TestMysqlParse(t *testing.T) {
 			}},
 		},
 	}}
+	testParseCases(t, p, tcs)
+}
 
+func testParseCases(t *testing.T, p parser.Parser, tcs []parseTestCase) {
+	t.Helper()
 	for _, c := range tcs {
 		table, fields, err := p.Parse(c.ddl)
 		if (c.success && err != nil) || (!c.success && err == nil) {
