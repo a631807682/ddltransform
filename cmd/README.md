@@ -1,7 +1,7 @@
 # ddltrans
 
 ## Install
-> go get github.com/a631807682/ddltransform/cmd
+> 	go install github.com/a631807682/ddltransform/cmd@latest
 
 ## Usage
 ```
