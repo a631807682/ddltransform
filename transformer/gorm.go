@@ -8,12 +8,14 @@ import (
 	"github.com/jinzhu/inflection"
 )
 
+// GormTransformer gorm transformer implement
 type GormTransformer struct{}
 
 func (*GormTransformer) Name() string {
 	return "gorm"
 }
 
+// Transform implement transform dll info to code
 func (*GormTransformer) Transform(table string, fields []schema.Field) (modeCode string, err error) {
 	tableName := utils.ToFormatName(inflection.Singular(table))
 

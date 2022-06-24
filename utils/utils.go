@@ -14,6 +14,7 @@ var (
 	caser             = cases.Title(language.Und)
 )
 
+// ToFormatName format underscore name
 func ToFormatName(name string) string {
 	result := strings.ReplaceAll(caser.String(strings.ReplaceAll(name, "_", " ")), " ", "")
 	for _, initialism := range commonInitialisms {
