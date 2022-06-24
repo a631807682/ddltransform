@@ -3,8 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/a631807682/ddltransform/parser"
-	"github.com/a631807682/ddltransform/transformer"
+	"github.com/a631807682/ddltransform"
 )
 
 const ddl = `		
@@ -23,15 +22,10 @@ CREATE TABLE test_data (
 `
 
 func main() {
-	mysqlp := &parser.MysqlParser{}
-	table, fields, err := mysqlp.Parse(ddl)
-	if err != nil {
-		fmt.Printf("parse err:%v", err)
-		return
-	}
-
-	gormt := &transformer.GormTransformer{}
-	code, err := gormt.Transform(table, fields)
+	code, err := ddltransform.Transform(ddl, ddltransform.Config{
+		Parser:      ddltransform.Mysql,
+		Transformer: ddltransform.Gorm,
+	})
 	if err != nil {
 		fmt.Printf("transform err:%v", err)
 		return

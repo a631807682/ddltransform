@@ -10,6 +10,10 @@ import (
 
 type GormTransformer struct{}
 
+func (*GormTransformer) Name() string {
+	return "gorm"
+}
+
 func (*GormTransformer) Transform(table string, fileds []schema.Field) (modeCode string, err error) {
 	tableName := utils.ToFormatName(inflection.Singular(table))
 

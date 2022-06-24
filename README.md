@@ -22,13 +22,10 @@ CREATE TABLE test_data (
 ) ENGINE=InnoDB AUTO_INCREMENT=95 DEFAULT CHARACTER SET utf8 COLLATE UTF8_GENERAL_CI ROW_FORMAT=COMPACT COMMENT='' CHECKSUM=0 DELAY_KEY_WRITE=0;
 `
 
-// parse ddl
-mysqlp := &parser.MysqlParser{}
-table, fields, err := mysqlp.Parse(ddl)
-...
-// generate model code
-gormt := &transformer.GormTransformer{}
-code, err := gormt.Transform(table, fields)
+code, err := ddltransform.Transform(ddl, ddltransform.Config{
+	Parser:      ddltransform.Mysql,
+	Transformer: ddltransform.Gorm,
+})
 ...
 
 fmt.Print(code)
