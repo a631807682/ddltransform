@@ -36,7 +36,7 @@ func (*emptyTransformer) Name() string {
 	return "empty_transformer"
 }
 
-func (*emptyTransformer) Transform(table string, fields []schema.Field) (string, error) {
+func (*emptyTransformer) Transform(_ string, _ []schema.Field) (string, error) {
 	return "empty", nil
 }
 func TestCustomizeTransform(t *testing.T) {
