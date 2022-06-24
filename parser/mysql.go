@@ -166,7 +166,7 @@ func parse(sql string) (*ast.StmtNode, error) {
 // MysqlParser mysql parser implement
 type MysqlParser struct{}
 
-// Parse implement parse dll info
+// Parse implement parse ddl info
 func (*MysqlParser) Parse(ddl string) (table string, fields []schema.Field, err error) {
 	astNode, err := parse(ddl)
 	if err != nil {

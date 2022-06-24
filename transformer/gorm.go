@@ -15,7 +15,7 @@ func (*GormTransformer) Name() string {
 	return "gorm"
 }
 
-// Transform implement transform dll info to code
+// Transform implement transform ddl info to code
 func (*GormTransformer) Transform(table string, fields []schema.Field) (modeCode string, err error) {
 	tableName := utils.ToFormatName(inflection.Singular(table))
 
