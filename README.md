@@ -70,8 +70,10 @@ code, err := ddltransform.Transform(ddl, ddltransform.Config{
 // SELECT id,create_at,deleted,version,address,amount,wx_mp_app_id,contacts FROM test_data
 
 ```
-3. Use command-line to generate model code (WIP)
+3. Use command-line to generate model code
+> ddltcmd start -ps sqlite -tf gorm -p ./sql.ddl
 
+More information about [ddltcmd](./ddltcmd/README.md)
 
 ## More Examples
 See full list of [examples](./examples/)
