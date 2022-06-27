@@ -1,7 +1,6 @@
 package parser
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/a631807682/ddltransform/schema"
@@ -21,7 +20,6 @@ type PostgresqlParser struct{}
 func (*PostgresqlParser) Parse(ddl string) (table string, fields []schema.Field, err error) {
 	stmts, err := parser.Parse(ddl)
 	if err != nil {
-		fmt.Println(err)
 		return
 	}
 
