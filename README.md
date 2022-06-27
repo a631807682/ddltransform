@@ -77,3 +77,11 @@ More information about [ddltcmd](./ddltcmd/README.md)
 
 ## More Examples
 See full list of [examples](./examples/)
+
+## TODO list
+### Support Database
+[x] Mysql
+[x] Postgresql
+
+### Support Orm
+[x] Gorm
