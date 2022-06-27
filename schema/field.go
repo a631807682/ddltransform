@@ -7,14 +7,15 @@ import (
 type Field struct {
 	DBName          string
 	DBType          string
-	ModelType       string
 	PrimaryKey      bool
 	AutoIncrement   bool
 	HasDefaultValue bool
 	DefaultValue    string
 	NotNull         bool
 	Unique          bool
-	UniqueKeyName   string
+	UniqueName      string
+	UniqueIndex     bool
+	UniqueIndexName string
 	Comment         string
 	GoType          FieldGoType
 }
@@ -41,7 +42,7 @@ func (field *Field) GetTagString() string {
 	}
 
 	if field.Unique {
-		attrs = append(attrs, "uniqueIndex:"+field.UniqueKeyName)
+		attrs = append(attrs, "uniqueIndex:"+field.UniqueName)
 	}
 
 	if field.Comment != "" {

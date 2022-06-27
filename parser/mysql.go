@@ -116,7 +116,7 @@ func (v *createTableVisitor) Enter(in ast.Node) (ast.Node, bool) {
 				field.PrimaryKey = true
 			}
 
-			field.UniqueKeyName, field.Unique = uniqueMaps[c.Name.Name.L]
+			field.UniqueName, field.Unique = uniqueMaps[c.Name.Name.L]
 
 			// field options
 			for _, opt := range c.Options {

@@ -45,7 +45,7 @@ func TestGormTransformer(t *testing.T) {
 			DefaultValue:    "10",
 			Comment:         "version info",
 			Unique:          true,
-			UniqueKeyName:   "uk_app_version",
+			UniqueName:      "uk_app_version",
 		}, {
 			DBName:          "address",
 			DBType:          "varchar(255)",
@@ -58,11 +58,11 @@ func TestGormTransformer(t *testing.T) {
 			DBType: "decimal(19,2)",
 			GoType: schema.Float,
 		}, {
-			DBName:        "wx_mp_app_id",
-			DBType:        "varchar(32)",
-			GoType:        schema.String,
-			Unique:        true,
-			UniqueKeyName: "uk_app_version",
+			DBName:     "wx_mp_app_id",
+			DBType:     "varchar(32)",
+			GoType:     schema.String,
+			Unique:     true,
+			UniqueName: "uk_app_version",
 		}, {
 			DBName: "contacts",
 			DBType: "varchar(50)",
