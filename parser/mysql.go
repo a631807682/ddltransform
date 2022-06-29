@@ -58,7 +58,7 @@ func (v *createTableVisitor) Enter(in ast.Node) (ast.Node, bool) {
 
 		// primary key
 		primaryKeyMaps := make(map[string]interface{})
-		uniqueMaps := make(map[string]string)
+		uniqueIndexMaps := make(map[string]string)
 		for _, c := range ctStmt.Constraints {
 			switch c.Tp {
 			case ast.ConstraintPrimaryKey:
@@ -68,7 +68,7 @@ func (v *createTableVisitor) Enter(in ast.Node) (ast.Node, bool) {
 			case ast.ConstraintUniq, ast.ConstraintUniqIndex,
 				ast.ConstraintUniqKey:
 				for _, k := range c.Keys {
-					uniqueMaps[k.Column.Name.L] = c.Name
+					uniqueIndexMaps[k.Column.Name.L] = c.Name
 				}
 			}
 		}
@@ -116,7 +116,7 @@ func (v *createTableVisitor) Enter(in ast.Node) (ast.Node, bool) {
 				field.PrimaryKey = true
 			}
 
-			field.UniqueName, field.Unique = uniqueMaps[c.Name.Name.L]
+			field.UniqueIndexName, field.UniqueIndex = uniqueIndexMaps[c.Name.Name.L]
 
 			// field options
 			for _, opt := range c.Options {

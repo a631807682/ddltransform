@@ -1,6 +1,8 @@
 package transformer
 
 import (
+	"strings"
+
 	"github.com/a631807682/ddltransform/schema"
 	"github.com/a631807682/ddltransform/utils"
 
@@ -22,7 +24,7 @@ func (*GormTransformer) Transform(table string, fields []schema.Field) (modeCode
 	fCodes := make([]j.Code, 0)
 	for _, field := range fields {
 		tags := make(map[string]string, 1)
-		tags["gorm"] = field.GetTagString()
+		tags["gorm"] = getTagString(field)
 		// field := j.Id(utils.ToFormatName(field.DBName)).String().Tag(tags)
 		fCode := j.Id(utils.ToFormatName(field.DBName))
 
@@ -50,4 +52,36 @@ func (*GormTransformer) Transform(table string, fields []schema.Field) (modeCode
 	)
 
 	return c.GoString(), nil
+}
+
+func getTagString(field schema.Field) string {
+	attrs := make([]string, 2, 10)
+	attrs[0] = "column:" + field.DBName
+	attrs[1] = "type:" + field.DBType
+
+	if field.PrimaryKey {
+		attrs = append(attrs, "primaryKey")
+	}
+
+	if field.AutoIncrement {
+		attrs = append(attrs, "autoIncrement")
+	}
+
+	if field.HasDefaultValue {
+		attrs = append(attrs, "default:"+field.DefaultValue)
+	}
+
+	if field.NotNull {
+		attrs = append(attrs, "NOT NULL")
+	}
+
+	if field.UniqueIndex {
+		attrs = append(attrs, "uniqueIndex:"+field.UniqueIndexName)
+	}
+
+	if field.Comment != "" {
+		attrs = append(attrs, "comment:"+field.Comment)
+	}
+
+	return strings.Join(attrs, ";")
 }

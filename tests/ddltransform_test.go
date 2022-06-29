@@ -10,16 +10,20 @@ import (
 
 func TestDefaultTransform(t *testing.T) {
 	ddl := `
-	CREATE TABLE blacklists  (
-		id int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-		email varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-		type varchar(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-		created_at datetime NOT NULL,
-		updated_at datetime NOT NULL,
-		PRIMARY KEY (id) USING BTREE
-	) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = DYNAMIC;
-	`
-	expectCode := "type Blacklist struct {\n\tID        uint64    `gorm:\"column:id;type:int(10) UNSIGNED;primaryKey;autoIncrement;NOT NULL\"`\n\tEmail     string    `gorm:\"column:email;type:varchar(50) CHARACTER SET utf8;NOT NULL\"`\n\tType      string    `gorm:\"column:type;type:varchar(20) CHARACTER SET utf8;NOT NULL\"`\n\tCreatedAt time.Time `gorm:\"column:created_at;type:datetime;NOT NULL\"`\n\tUpdatedAt time.Time `gorm:\"column:updated_at;type:datetime;NOT NULL\"`\n}"
+		CREATE TABLE test_data (
+			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			create_at datetime NOT NULL,
+			deleted tinyint(1) NOT NULL,
+			version bigint(20) DEFAULT '10' COMMENT 'version info',
+			address varchar(255) NOT NULL DEFAULT 'china',
+			amount decimal(19,2) DEFAULT NULL,
+			wx_mp_app_id varchar(32) DEFAULT NULL,
+			contacts varchar(50) DEFAULT NULL,
+			PRIMARY KEY (id),
+			UNIQUE KEY uk_app_version (wx_mp_app_id, version)
+		) ENGINE=InnoDB AUTO_INCREMENT=95 DEFAULT CHARACTER SET utf8 COLLATE UTF8_GENERAL_CI ROW_FORMAT=COMPACT COMMENT='' CHECKSUM=0 DELAY_KEY_WRITE=0;
+		`
+	expectCode := "type TestDatum struct {\n\tID        uint64    `gorm:\"column:id;type:bigint(20) UNSIGNED;primaryKey;autoIncrement;NOT NULL\"`\n\tCreateAt  time.Time `gorm:\"column:create_at;type:datetime;NOT NULL\"`\n\tDeleted   bool      `gorm:\"column:deleted;type:tinyint(1);NOT NULL\"`\n\tVersion   int64     `gorm:\"column:version;type:bigint(20);default:10;uniqueIndex:uk_app_version;comment:version info\"`\n\tAddress   string    `gorm:\"column:address;type:varchar(255);default:china;NOT NULL\"`\n\tAmount    float64   `gorm:\"column:amount;type:decimal(19,2)\"`\n\tWxMpAppID string    `gorm:\"column:wx_mp_app_id;type:varchar(32);uniqueIndex:uk_app_version\"`\n\tContacts  string    `gorm:\"column:contacts;type:varchar(50)\"`\n}"
 
 	code, err := ddltransform.Transform(ddl, ddltransform.Config{
 		ParserType:      ddltransform.Mysql,
