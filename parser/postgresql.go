@@ -11,9 +11,8 @@ import (
 )
 
 // PostgresqlParser postgresql parser implement
-// Note: postgresql ddl not support index and comment and collate
+// Note: postgresql ddl not support index and comment and collate "pg_catalog"."default"
 // https://stackoverflow.com/questions/6239657/can-you-create-an-index-in-the-create-table-definition
-// It's using github.com/auxten/postgresql-parser package which is not support `COLLATE`
 type PostgresqlParser struct{}
 
 // Parse implement parse ddl info
@@ -32,22 +31,23 @@ func (*PostgresqlParser) Parse(ddl string) (table string, fields []schema.Field,
 
 				var fieldIdx int
 				for _, d := range ct.Defs {
-					if columnDef, ok := d.(*tree.ColumnTableDef); ok {
+					switch def := d.(type) {
+					case *tree.ColumnTableDef:
 						field := schema.Field{
-							DBName:          columnDef.Name.String(),
-							DBType:          strings.ToLower(columnDef.Type.SQLString()),
-							PrimaryKey:      columnDef.PrimaryKey.IsPrimaryKey,
+							DBName:          def.Name.String(),
+							DBType:          strings.ToLower(def.Type.SQLString()),
+							PrimaryKey:      def.PrimaryKey.IsPrimaryKey,
 							AutoIncrement:   false,
-							HasDefaultValue: columnDef.HasDefaultExpr(),
-							NotNull:         columnDef.Nullable.Nullability == tree.NotNull,
+							HasDefaultValue: def.HasDefaultExpr(),
+							NotNull:         def.Nullable.Nullability == tree.NotNull,
 							UniqueIndex:     false, // not support
 							UniqueIndexName: "",    // not support
 							Comment:         "",    // not support
-							GoType:          transColumn2GoType(columnDef.Type),
+							GoType:          transColumn2GoType(def.Type),
 						}
 
 						if field.HasDefaultValue {
-							val := columnDef.DefaultExpr.Expr.String()
+							val := def.DefaultExpr.Expr.String()
 							field.DefaultValue = val
 							if strings.Contains(val, "nextval") {
 								field.AutoIncrement = true
@@ -59,15 +59,14 @@ func (*PostgresqlParser) Parse(ddl string) (table string, fields []schema.Field,
 							field: &field,
 						}
 						fieldIdx++
-					} else if uniqueDef, ok := d.(*tree.UniqueConstraintTableDef); ok {
-						for _, col := range uniqueDef.Columns {
-
+					case *tree.UniqueConstraintTableDef:
+						for _, col := range def.Columns {
 							if idxField, ok := fieldsMap[col.Column.String()]; ok {
-								if uniqueDef.PrimaryKey {
+								if def.PrimaryKey {
 									idxField.field.PrimaryKey = true
 								} else {
 									idxField.field.Unique = true
-									idxField.field.UniqueName = uniqueDef.Name.String()
+									idxField.field.UniqueName = def.Name.String()
 								}
 							}
 						}

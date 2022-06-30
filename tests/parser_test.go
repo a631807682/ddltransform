@@ -105,7 +105,7 @@ CREATE TABLE "public"."test_data" (
   "address" varchar(255) NOT NULL DEFAULT 'china'::character varying,
   "amount" decimal(10,2),
   "wx_mp_app_id" varchar(32),
-  "contacts" varchar(50),
+  "contacts" varchar(50) COLLATE "es_ES",
   CONSTRAINT "test_data_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "u_app_id" UNIQUE ("wx_mp_app_id")
 )
@@ -157,7 +157,7 @@ CREATE TABLE "public"."test_data" (
 				UniqueName: "u_app_id",
 			}, {
 				DBName: "contacts",
-				DBType: "varchar(50)",
+				DBType: "varchar(50) collate es_es",
 				GoType: schema.String,
 			}},
 		},
@@ -170,7 +170,7 @@ func testParseCases(t *testing.T, p parser.Parser, tcs []parseTestCase) {
 	for _, c := range tcs {
 		table, fields, err := p.Parse(c.ddl)
 		if (c.success && err != nil) || (!c.success && err == nil) {
-			t.Errorf("success flag and parse status not equal expect status:%v got err:%v", c.success, err)
+			t.Fatalf("success flag and parse status not equal expect status:%v got err:%v", c.success, err)
 		}
 
 		assert.Equal(t, c.parseRes.table, table)
