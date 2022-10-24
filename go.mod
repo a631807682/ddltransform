@@ -8,7 +8,7 @@ require (
 	github.com/jinzhu/inflection v1.0.0
 	github.com/pingcap/tidb/parser v0.0.0-20220622075636-494759d4aa18
 	github.com/stretchr/testify v1.7.5
-	golang.org/x/text v0.3.7
+	golang.org/x/text v0.4.0
 )
 
 require (
@@ -40,7 +40,7 @@ require (
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.18.1 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
-	golang.org/x/sys v0.0.0-20211019181941-9d821ace8654 // indirect
+	golang.org/x/sys v0.0.0-20220722155257-8c9f86f7a55f // indirect
 	google.golang.org/genproto v0.0.0-20200911024640-645f7a48b24f // indirect
 	google.golang.org/grpc v1.33.1 // indirect
 	google.golang.org/protobuf v1.25.0 // indirect
