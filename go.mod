@@ -3,7 +3,7 @@ module github.com/a631807682/ddltransform
 go 1.18
 
 require (
-	github.com/auxten/postgresql-parser v1.0.0
+	github.com/auxten/postgresql-parser v1.0.1
 	github.com/dave/jennifer v1.5.0
 	github.com/jinzhu/inflection v1.0.0
 	github.com/pingcap/tidb/parser v0.0.0-20220622075636-494759d4aa18
@@ -22,7 +22,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dustin/go-humanize v1.0.0 // indirect
 	github.com/getsentry/raven-go v0.2.0 // indirect
-	github.com/gogo/protobuf v1.3.1 // indirect
+	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.4.3 // indirect
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0 // indirect
 	github.com/konsorten/go-windows-terminal-sequences v1.0.3 // indirect
