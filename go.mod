@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/auxten/postgresql-parser v1.0.1
-	github.com/dave/jennifer v1.5.0
+	github.com/dave/jennifer v1.6.0
 	github.com/jinzhu/inflection v1.0.0
 	github.com/pingcap/tidb/parser v0.0.0-20220622075636-494759d4aa18
 	github.com/stretchr/testify v1.8.1
