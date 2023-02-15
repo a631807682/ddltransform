@@ -8,7 +8,7 @@ require (
 	github.com/jinzhu/inflection v1.0.0
 	github.com/pingcap/tidb/parser v0.0.0-20220622075636-494759d4aa18
 	github.com/stretchr/testify v1.8.1
-	golang.org/x/text v0.6.0
+	golang.org/x/text v0.7.0
 )
 
 require (
