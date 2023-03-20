@@ -3,12 +3,12 @@ module github.com/a631807682/ddltransform
 go 1.18
 
 require (
-	github.com/auxten/postgresql-parser v1.0.0
-	github.com/dave/jennifer v1.5.0
+	github.com/auxten/postgresql-parser v1.0.1
+	github.com/dave/jennifer v1.6.0
 	github.com/jinzhu/inflection v1.0.0
 	github.com/pingcap/tidb/parser v0.0.0-20220622075636-494759d4aa18
-	github.com/stretchr/testify v1.7.5
-	golang.org/x/text v0.3.7
+	github.com/stretchr/testify v1.8.2
+	golang.org/x/text v0.8.0
 )
 
 require (
@@ -22,7 +22,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dustin/go-humanize v1.0.0 // indirect
 	github.com/getsentry/raven-go v0.2.0 // indirect
-	github.com/gogo/protobuf v1.3.1 // indirect
+	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.4.3 // indirect
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0 // indirect
 	github.com/konsorten/go-windows-terminal-sequences v1.0.3 // indirect
@@ -40,7 +40,7 @@ require (
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.18.1 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
-	golang.org/x/sys v0.0.0-20211019181941-9d821ace8654 // indirect
+	golang.org/x/sys v0.5.0 // indirect
 	google.golang.org/genproto v0.0.0-20200911024640-645f7a48b24f // indirect
 	google.golang.org/grpc v1.33.1 // indirect
 	google.golang.org/protobuf v1.25.0 // indirect
